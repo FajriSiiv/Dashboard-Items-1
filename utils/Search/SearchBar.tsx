@@ -4,7 +4,7 @@ import { TextField } from "@mui/material";
 const SearchBarComponent = ({ valueSearch, onChange }: any) => {
   return (
     <TextField
-      sx={{ minWidth: "500px" }}
+      sx={{ width: "100%" }}
       label="Cari Barang"
       value={valueSearch}
       onChange={onChange}

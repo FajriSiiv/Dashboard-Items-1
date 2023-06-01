@@ -22,7 +22,7 @@ const Checkmarks = ({ options, onChange, filterValue }: any) => {
 
   return (
     <div>
-      <FormControl sx={{ width: 300 }}>
+      <FormControl sx={{ width: 200 }}>
         <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"

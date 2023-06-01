@@ -15,16 +15,16 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useState, useEffect } from "react";
 import FilterSelect from "@/utils/Filter/FilterSelect";
 import Checkmarks from "@/utils/Filter/FilterCheckmark";
-import { Stack } from "@mui/material";
+import { Stack, Drawer } from "@mui/material";
 import SearchBarComponent from "@/utils/Search/SearchBar";
+import DetailDrawerContact from "@/components/Drawer/Items/DrawerItems";
+import ResetButton from "@/utils/Button/ResetButton";
 
 interface Data {
   jumlah_barang: number;
@@ -47,6 +47,7 @@ const rows = [
     estimasi_penerimaan: "2023-06-05",
     harga_barang: 150000,
     jumlah_barang: 2,
+    id: 1,
   },
   {
     nama_barang: "Sepatu",
@@ -57,6 +58,7 @@ const rows = [
     estimasi_penerimaan: "2023-06-02",
     harga_barang: 300000,
     jumlah_barang: 1,
+    id: 2,
   },
   {
     nama_barang: "Tas",
@@ -67,6 +69,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-28",
     harga_barang: 250000,
     jumlah_barang: 3,
+    id: 3,
   },
   {
     nama_barang: "Celana",
@@ -77,6 +80,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-28",
     harga_barang: 120000,
     jumlah_barang: 2,
+    id: 4,
   },
   {
     nama_barang: "Kacamata",
@@ -87,6 +91,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-22",
     harga_barang: 80000,
     jumlah_barang: 1,
+    id: 5,
   },
   {
     nama_barang: "Buku",
@@ -97,6 +102,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-18",
     harga_barang: 50000,
     jumlah_barang: 3,
+    id: 6,
   },
   {
     nama_barang: "Sandal",
@@ -107,6 +113,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-16",
     harga_barang: 100000,
     jumlah_barang: 1,
+    id: 7,
   },
   {
     nama_barang: "Jam Tangan",
@@ -117,6 +124,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-15",
     harga_barang: 200000,
     jumlah_barang: 2,
+    id: 8,
   },
   {
     nama_barang: "Kamera",
@@ -127,6 +135,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-12",
     harga_barang: 500000,
     jumlah_barang: 1,
+    id: 9,
   },
   {
     nama_barang: "Jaket",
@@ -137,6 +146,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-09",
     harga_barang: 180000,
     jumlah_barang: 2,
+    id: 10,
   },
   {
     nama_barang: "Dompet",
@@ -147,6 +157,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-07",
     harga_barang: 75000,
     jumlah_barang: 1,
+    id: 11,
   },
   {
     nama_barang: "Parfum",
@@ -157,6 +168,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-05",
     harga_barang: 150000,
     jumlah_barang: 3,
+    id: 12,
   },
   {
     nama_barang: "Sepeda",
@@ -167,6 +179,7 @@ const rows = [
     estimasi_penerimaan: "2023-05-02",
     harga_barang: 1000000,
     jumlah_barang: 1,
+    id: 13,
   },
   {
     nama_barang: "Payung",
@@ -177,6 +190,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-29",
     harga_barang: 50000,
     jumlah_barang: 2,
+    id: 14,
   },
   {
     nama_barang: "Kalung",
@@ -187,6 +201,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-27",
     harga_barang: 75000,
     jumlah_barang: 1,
+    id: 15,
   },
   {
     nama_barang: "Tas Tangan",
@@ -197,6 +212,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-25",
     harga_barang: 200000,
     jumlah_barang: 2,
+    id: 16,
   },
   {
     nama_barang: "Dumbbell",
@@ -207,6 +223,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-22",
     harga_barang: 150000,
     jumlah_barang: 1,
+    id: 17,
   },
   {
     nama_barang: "Konsol Game",
@@ -217,6 +234,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-19",
     harga_barang: 400000,
     jumlah_barang: 1,
+    id: 18,
   },
   {
     nama_barang: "Speaker",
@@ -227,6 +245,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-17",
     harga_barang: 250000,
     jumlah_barang: 2,
+    id: 19,
   },
   {
     nama_barang: "Drone",
@@ -237,6 +256,7 @@ const rows = [
     estimasi_penerimaan: "2023-04-14",
     harga_barang: 800000,
     jumlah_barang: 1,
+    id: 20,
   },
 ];
 
@@ -468,6 +488,9 @@ export default function DataTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const [drawerDetail, setDrawerDetail] = useState(false);
+  const [drawerEdit, setDrawerEdit] = useState(false);
+
   const [setData, setSetData] = useState(rows);
   const [emptyData, setEmptyData] = useState([]);
 
@@ -475,6 +498,8 @@ export default function DataTable() {
   const [filterValue, setFilterValue] = useState("");
 
   const [searchText, setSearchText] = useState("");
+
+  const [idDrawer, setIdDrawer] = useState("");
 
   const [tag, setTag] = useState([
     "Pakaian",
@@ -542,6 +567,12 @@ export default function DataTable() {
     setPage(newPage);
   };
 
+  const handleRowClick = (row: any) => {
+    setDrawerDetail(true);
+    setDrawerEdit(false);
+    setIdDrawer(row);
+  };
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -590,6 +621,12 @@ export default function DataTable() {
     searchText,
   ]);
 
+  const handleResetClick = () => {
+    setFilterValue("");
+    setSearchText("");
+    setTag(["Pakaian", "Elektronik", "Buku", "Olahraga", "Aksesoris"]);
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -621,6 +658,7 @@ export default function DataTable() {
               filterValue={tag}
               onChange={handleChangeMarkTag}
             />
+            <ResetButton onClick={handleResetClick} />
           </Stack>
         </Stack>
         <TableContainer>
@@ -670,18 +708,40 @@ export default function DataTable() {
                       id={labelId}
                       scope="row"
                       padding="none"
+                      onClick={(e) => handleRowClick(row.id)}
                     >
                       {row.nama_barang}
                     </TableCell>
-                    <TableCell align="left">{row.tipe_barang}</TableCell>
-                    {/* <TableCell align="right">{row.pembeli}</TableCell> */}
-                    <TableCell align="left">{row.tanggal_pemesanan}</TableCell>
-                    {/* <TableCell align="right">
-                      {row.estimasi_penerimaan}
-                    </TableCell> */}
-                    <TableCell align="left">{row.status}</TableCell>
-                    <TableCell align="right">{row.harga_barang}</TableCell>
-                    <TableCell align="right">{row.jumlah_barang}</TableCell>
+                    <TableCell
+                      align="left"
+                      onClick={(e) => handleRowClick(row.id)}
+                    >
+                      {row.tipe_barang}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      onClick={(e) => handleRowClick(row.id)}
+                    >
+                      {row.tanggal_pemesanan}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      onClick={(e) => handleRowClick(row.id)}
+                    >
+                      {row.status}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      onClick={(e) => handleRowClick(row.id)}
+                    >
+                      {row.harga_barang}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      onClick={(e) => handleRowClick(row.id)}
+                    >
+                      {row.jumlah_barang}
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -707,6 +767,19 @@ export default function DataTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+
+      <>
+        <Drawer
+          anchor="right"
+          open={drawerDetail}
+          onClose={() => {
+            setDrawerDetail(false);
+            setDrawerEdit(false);
+          }}
+        >
+          <DetailDrawerContact data={rows} idDrawer={idDrawer} />
+        </Drawer>
+      </>
     </Box>
   );
 }

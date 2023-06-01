@@ -78,7 +78,6 @@ export default function Dashboard() {
       style={{
         padding: "20px",
         background: "#f8f9fa",
-        minHeight: "100vh",
       }}
     >
       <Header />
