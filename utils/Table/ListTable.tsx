@@ -404,7 +404,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
+        {headCells.map((headCell: any) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -543,7 +543,7 @@ export default function ListTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = setData.map((n) => n.title);
+      const newSelected = setData.map((n: Data) => n.title);
       setSelected(newSelected);
       return;
     }
@@ -597,16 +597,16 @@ export default function ListTable() {
 
     if (tag) {
       const tags = Array.isArray(tag) ? tag : [tag];
-      filteredData = filteredData.filter((item) => {
+      filteredData = filteredData.filter((item: Data) => {
         const itemTags = Array.isArray(item.category)
           ? item.category
           : [item.category];
-        return itemTags.some((tagItem) => tags.includes(tagItem));
+        return itemTags.some((tagItem: any) => tags.includes(tagItem));
       });
     }
 
     if (searchText) {
-      filteredData = filteredData.filter((item) =>
+      filteredData = filteredData.filter((item: Data) =>
         item.title.toLowerCase().includes(searchText.toLowerCase())
       );
     }
@@ -695,7 +695,7 @@ export default function ListTable() {
             />
 
             <TableBody>
-              {visibleRows.map((row, index) => {
+              {visibleRows.map((row: any, index: any) => {
                 const isItemSelected = isSelected(row.title);
                 const labelId = `enhanced-table-checkbox-${index}`;
 

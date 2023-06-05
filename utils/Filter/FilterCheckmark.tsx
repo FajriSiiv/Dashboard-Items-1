@@ -34,7 +34,7 @@ const Checkmarks = ({ options, onChange, filterValue }: any) => {
           label="Tag"
           sx={{ textTransform: "capitalize" }}
         >
-          {options.map((option, index) => (
+          {options.map((option: any, index: any) => (
             <MenuItem
               key={index}
               value={option}

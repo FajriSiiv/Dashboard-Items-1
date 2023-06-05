@@ -4,15 +4,15 @@ import React from "react";
 interface FilterProps {
   options: any;
   value: string;
-  onChange: (event: React.ChangeEvent<any>) => void;
+  onChanges: (event: React.ChangeEvent<any>) => void;
 }
 
-const FilterSelect = ({ options, value, onChange }: FilterProps) => {
+const FilterSelect = ({ options, value, onChanges }: FilterProps) => {
   return (
     <FormControl sx={{ minWidth: "200px" }}>
       <InputLabel>Status Barang</InputLabel>
-      <Select value={value} onChange={onChange} label="Status Barang">
-        {options.map((option, index) => (
+      <Select value={value} onChange={() => onChanges} label="Status Barang">
+        {options.map((option: any, index: any) => (
           <MenuItem key={index} value={option}>
             {option}
           </MenuItem>

@@ -520,7 +520,7 @@ export default function DataTable() {
     setTag(typeof value === "string" ? value.split(",") : value);
   };
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterChange = (event: any) => {
     const selectedValue = event.target.value;
     setFilterValue(selectedValue);
   };
@@ -645,7 +645,7 @@ export default function DataTable() {
             <FilterSelect
               options={["Dalam Proses", "Selesai"]}
               value={filterValue}
-              onChange={handleFilterChange}
+              onChanges={handleFilterChange}
             />
             <Checkmarks
               options={[
