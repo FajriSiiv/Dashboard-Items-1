@@ -25,6 +25,7 @@ import { Stack, Drawer } from "@mui/material";
 import SearchBarComponent from "@/utils/Search/SearchBar";
 import DetailDrawerContact from "@/components/Drawer/Items/DrawerItems";
 import ResetButton from "@/utils/Button/ResetButton";
+import { getProduct } from "@/pages/api/ecommerce";
 
 interface Data {
   jumlah_barang: number;
@@ -35,6 +36,11 @@ interface Data {
   pembeli: string;
   tanggal_pemesanan: string;
   estimasi_penerimaan: string;
+  title: string;
+  price: number;
+  category: string;
+  description: string;
+  image: string;
 }
 
 const rows = [
@@ -304,17 +310,18 @@ interface HeadCell {
   id: keyof Data;
   label: string;
   numeric: boolean;
+  title: string;
 }
 
-const headCells: readonly HeadCell[] = [
+const headCells: any = [
   {
-    id: "nama_barang",
+    id: "title",
     numeric: false,
     disablePadding: true,
     label: "Nama Barang",
   },
   {
-    id: "tipe_barang",
+    id: "category",
     numeric: false,
     disablePadding: false,
     label: "Tipe Barang",
@@ -325,12 +332,12 @@ const headCells: readonly HeadCell[] = [
   //   disablePadding: false,
   //   label: "Pembeli",
   // },
-  {
-    id: "tanggal_pemesanan",
-    numeric: false,
-    disablePadding: false,
-    label: "Tanggal Pemesanan",
-  },
+  // {
+  //   id: "tanggal_pemesanan",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Tanggal Pemesanan",
+  // },
   // {
   //   id: "estimasi_penerimaan",
   //   numeric: false,
@@ -338,23 +345,23 @@ const headCells: readonly HeadCell[] = [
   //   label: "Estimasi Penerimaan",
   // },
   {
-    id: "status",
+    id: "price",
     numeric: false,
-    disablePadding: false,
-    label: "Status",
-  },
-  {
-    id: "harga_barang",
-    numeric: true,
     disablePadding: false,
     label: "Harga",
   },
-  {
-    id: "jumlah_barang",
-    numeric: true,
-    disablePadding: false,
-    label: "Jumlah",
-  },
+  // {
+  //   id: "image",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Gambar",
+  // },
+  // {
+  //   id: "jumlah_barang",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Jumlah",
+  // },
 ];
 
 interface EnhancedTableProps {
@@ -491,7 +498,8 @@ export default function ListTable() {
   const [drawerDetail, setDrawerDetail] = useState(false);
   const [drawerEdit, setDrawerEdit] = useState(false);
 
-  const [setData, setSetData] = useState(rows);
+  const [setData, setSetData] = useState([]);
+  const [rowEm, setRowEm] = useState([]);
   const [emptyData, setEmptyData] = useState([]);
 
   const [filteredData, setFilteredData] = useState(rows);
@@ -502,11 +510,10 @@ export default function ListTable() {
   const [idDrawer, setIdDrawer] = useState("");
 
   const [tag, setTag] = useState([
-    "Pakaian",
-    "Elektronik",
-    "Buku",
-    "Olahraga",
-    "Aksesoris",
+    "electronics",
+    "jewelery",
+    "men's clothing",
+    "women's clothing",
   ]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -520,10 +527,10 @@ export default function ListTable() {
     setTag(typeof value === "string" ? value.split(",") : value);
   };
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedValue = event.target.value;
-    setFilterValue(selectedValue);
-  };
+  // const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const selectedValue = event.target.value;
+  //   setFilterValue(selectedValue);
+  // };
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -536,7 +543,7 @@ export default function ListTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = setData.map((n) => n.nama_barang);
+      const newSelected = setData.map((n) => n.title);
       setSelected(newSelected);
       return;
     }
@@ -586,23 +593,21 @@ export default function ListTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - setData.length) : 0;
 
   const visibleRows = React.useMemo(() => {
-    let filteredData = filterValue
-      ? setData.filter((item) => item.status === filterValue)
-      : setData;
+    let filteredData = filterValue ? setData : setData;
 
     if (tag) {
       const tags = Array.isArray(tag) ? tag : [tag];
       filteredData = filteredData.filter((item) => {
-        const itemTags = Array.isArray(item.tipe_barang)
-          ? item.tipe_barang
-          : [item.tipe_barang];
+        const itemTags = Array.isArray(item.category)
+          ? item.category
+          : [item.category];
         return itemTags.some((tagItem) => tags.includes(tagItem));
       });
     }
 
     if (searchText) {
       filteredData = filteredData.filter((item) =>
-        item.nama_barang.toLowerCase().includes(searchText.toLowerCase())
+        item.title.toLowerCase().includes(searchText.toLowerCase())
       );
     }
 
@@ -627,6 +632,20 @@ export default function ListTable() {
     setTag(["Pakaian", "Elektronik", "Buku", "Olahraga", "Aksesoris"]);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getProduct();
+        setSetData(response);
+        console.log(setData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -642,18 +661,17 @@ export default function ListTable() {
             valueSearch={searchText}
           />
           <Stack gap={2} direction="row" alignItems="center">
-            <FilterSelect
+            {/* <FilterSelect
               options={["Dalam Proses", "Selesai"]}
               value={filterValue}
               onChange={handleFilterChange}
-            />
+            /> */}
             <Checkmarks
               options={[
-                "Pakaian",
-                "Elektronik",
-                "Buku",
-                "Olahraga",
-                "Aksesoris",
+                "electronics",
+                "jewelery",
+                "men's clothing",
+                "women's clothing",
               ]}
               filterValue={tag}
               onChange={handleChangeMarkTag}
@@ -678,7 +696,7 @@ export default function ListTable() {
 
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.nama_barang);
+                const isItemSelected = isSelected(row.title);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -687,13 +705,13 @@ export default function ListTable() {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.nama_barang}
+                    key={row.title}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
                     <TableCell
                       padding="checkbox"
-                      onClick={(event) => handleClick(event, row.nama_barang)}
+                      onClick={(event) => handleClick(event, row.title)}
                     >
                       <Checkbox
                         color="primary"
@@ -710,38 +728,35 @@ export default function ListTable() {
                       padding="none"
                       onClick={(e) => handleRowClick(row.id)}
                     >
-                      {row.nama_barang}
+                      {row.title}
                     </TableCell>
+
                     <TableCell
                       align="left"
                       onClick={(e) => handleRowClick(row.id)}
+                      sx={{ textTransform: "capitalize" }}
                     >
-                      {row.tipe_barang}
+                      {row.category}
                     </TableCell>
-                    <TableCell
+                    {/* <TableCell
                       align="left"
                       onClick={(e) => handleRowClick(row.id)}
                     >
                       {row.tanggal_pemesanan}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell
                       align="left"
                       onClick={(e) => handleRowClick(row.id)}
                     >
-                      {row.status}
+                      ${row.price}
                     </TableCell>
-                    <TableCell
-                      align="right"
-                      onClick={(e) => handleRowClick(row.id)}
-                    >
-                      {row.harga_barang}
-                    </TableCell>
-                    <TableCell
+
+                    {/* <TableCell
                       align="right"
                       onClick={(e) => handleRowClick(row.id)}
                     >
                       {row.jumlah_barang}
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 );
               })}

@@ -32,9 +32,14 @@ const Checkmarks = ({ options, onChange, filterValue }: any) => {
           onChange={onChange}
           renderValue={(selected) => selected.join(", ")}
           label="Tag"
+          sx={{ textTransform: "capitalize" }}
         >
           {options.map((option, index) => (
-            <MenuItem key={index} value={option}>
+            <MenuItem
+              key={index}
+              value={option}
+              sx={{ textTransform: "capitalize" }}
+            >
               <Checkbox checked={filterValue.indexOf(option) > -1} />
               <ListItemText primary={option} />
             </MenuItem>

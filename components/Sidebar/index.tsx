@@ -51,7 +51,9 @@ export default function Sidebar() {
           variant="h4"
           component="h1"
           fontWeight={800}
-          fontFamily="Righteous"
+          sx={{
+            fontFamily: "Righteous !important",
+          }}
         >
           logip
         </Typography>
